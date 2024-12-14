@@ -5,11 +5,18 @@ import asyncio
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from database import create_table, insert_row_employee, fetch_all_courses
+from dotenv import load_dotenv
+import os
 
-bot = Bot(token="7381097127:AAF0vvBalBzxMCNQQ71l1G_o__v5zAebgB0")
+
+load_dotenv()
+
+TOKEN = os.getenv('TOKEN')
+ADMIN_ID = os.getenv('ADMIN_ID')
+
+bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-ADMIN_ID = 5167032738
 
 
 class CourseStates(StatesGroup):
