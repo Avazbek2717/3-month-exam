@@ -36,7 +36,7 @@ async def start(message: Message, state: FSMContext):
         ],
         resize_keyboard=True
     )
-    await message.reply(text=f"{message.from_user.first_name}\nAssalomu alaykum botimizga hush kelibsiz\nRo'yxatdan o'tish boshlandi:", reply_markup=keybord1)
+    await message.reply(text=f"{message.from_user.first_name}\nAssalomu alaykum botimizga hush kelibsiz/bizning o'quv markaz eng zor", reply_markup=keybord1)
     create_table()
 
 
