@@ -12,7 +12,7 @@ import os
 load_dotenv()
 
 TOKEN = os.getenv('TOKEN')
-ADMIN_ID = int(os.getenv('ADMIN_ID'))
+ADMIN_ID = 5167032738
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
