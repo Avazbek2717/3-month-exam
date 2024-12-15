@@ -4,10 +4,9 @@ from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup, InlineKe
 import asyncio
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
-from database import create_table, insert_row_employee, fetch_all_courses
+from database import create_or_recreate_table, insert_row_employee, fetch_all_courses  # Yangi import qilingan funksiyalar
 from dotenv import load_dotenv
 import os
-
 
 load_dotenv()
 
@@ -17,11 +16,11 @@ ADMIN_ID = 5167032738
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-
-
 class CourseStates(StatesGroup):
     name = State()
     price = State()
+    day = State()
+    date = State()
     description = State()
     teacher_info = State()
 
@@ -37,7 +36,7 @@ async def start(message: Message, state: FSMContext):
         resize_keyboard=True
     )
     await message.reply(text=f"{message.from_user.first_name}\nAssalomu alaykum botimizga hush kelibsiz/bizning o'quv markaz eng zor", reply_markup=keybord1)
-    create_table()
+    create_or_recreate_table()  # Jadvalni yaratish yoki qayta yaratish
 
 
 @dp.message(lambda message: message.text == "O'quv kurslar")
@@ -64,8 +63,10 @@ async def course_details_handler(query: CallbackQuery):
         course_details = (
             f"Kurs nomi: {course[0]}\n"
             f"Narxi: {course[1]}\n"
-            f"Tavsifi: {course[2]}\n"
-            f"O'qituvchi haqida: {course[3]}"
+            f"Kunlar: {course[2]}\n"
+            f"Vaqti: {course[3]}\n"
+            f"Tavsifi: {course[4]}\n"
+            f"O'qituvchi haqida: {course[5]}"
         )
         await query.message.reply(course_details)
     else:
@@ -96,6 +97,18 @@ async def add_course_name(message: Message, state: FSMContext):
 @dp.message(CourseStates.price)
 async def add_course_price(message: Message, state: FSMContext):
     await state.update_data(price=message.text)
+    await message.reply("Kurs kunlarini kiriting:")
+    await state.set_state(CourseStates.day)
+
+@dp.message(CourseStates.day)
+async def add_day(message: Message, state: FSMContext):
+    await state.update_data(day=message.text)
+    await message.reply('Kurs vaqtini qo\'shing')
+    await state.set_state(CourseStates.date)
+
+@dp.message(CourseStates.date)
+async def add_time(message: Message, state: FSMContext):
+    await state.update_data(date=message.text)
     await message.reply("Kurs tavsifini kiriting:")
     await state.set_state(CourseStates.description)
 
@@ -111,10 +124,9 @@ async def add_course_description(message: Message, state: FSMContext):
 async def add_course_teacher_info(message: Message, state: FSMContext):
     await state.update_data(teacher_info=message.text)
     data = await state.get_data()
-    insert_row_employee(data['name'], data['price'], data['description'], data['teacher_info'])
+    insert_row_employee(data['name'], data['price'], data['day'], data['date'], data['description'], data['teacher_info'])
 
-
-    await message.reply(f"Kurs muvaffaqiyatli qo'shildi!\nName: {data["name"]}\nPrice: {data["price"]}\nDescraption: {data['description']}\nTeacher_info: {data['teacher_info']}")
+    await message.reply(f"Kurs muvaffaqiyatli qo'shildi!\nName: {data['name']}\nPrice: {data['price']}\nKunlar: {data['day']}\nBoshlanish vaqti: {data['date']}\nDescraption: {data['description']}\nTeacher_info: {data['teacher_info']}")
     await state.clear()
 
 
