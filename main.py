@@ -29,8 +29,8 @@ class CourseStates(StatesGroup):
 async def start(message: Message, state: FSMContext):
     keybord1 = ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text="O'quv kurslar")],[KeyboardButton(text="Bizning afzalliklar")],
-            [KeyboardButton(text="Kurs qo'shish")],[KeyboardButton(text="Telefon raqam")]
+            [KeyboardButton(text="O'quv kurslar"),KeyboardButton(text="Bizning afzalliklar")],
+            [KeyboardButton(text="Kurs qo'shish"),KeyboardButton(text="Telefon raqam")]
         ],
         resize_keyboard=True
     )
