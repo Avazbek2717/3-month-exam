@@ -4,7 +4,7 @@ from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup, InlineKe
 import asyncio
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
-from database import create_or_recreate_table, insert_row_employee, fetch_all_courses  # Yangi import qilingan funksiyalar
+from database import create_or_recreate_table, insert_row_employee, fetch_all_courses  
 from dotenv import load_dotenv
 import os
 
@@ -29,9 +29,8 @@ class CourseStates(StatesGroup):
 async def start(message: Message, state: FSMContext):
     keybord1 = ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text="O'quv kurslar")],
-            [KeyboardButton(text="Bizning afzalliklar")],
-            [KeyboardButton(text="Kurs qo'shish")]
+            [KeyboardButton(text="O'quv kurslar")],[KeyboardButton(text="Bizning afzalliklar")],
+            [KeyboardButton(text="Kurs qo'shish")],[KeyboardButton(text="Telefon raqam")]
         ],
         resize_keyboard=True
     )
@@ -71,6 +70,12 @@ async def course_details_handler(query: CallbackQuery):
         await query.message.reply(course_details)
     else:
         await query.message.reply("Bunday kurs mavjud emas.")
+
+@dp.message(lambda message: message.text == "Telefon raqam")
+async def phone_number(message: Message):
+    await message.reply("Bizning rasmiy telefon raqmimiz:")
+    await message.answer(text="+998933622717")
+
 
 
 @dp.message(lambda message: message.text == "Bizning afzalliklar")
